@@ -58,7 +58,8 @@ export async function preUpgradeCommandsExecutor(
           cmd,
           allowUpgradeCommandTemplating,
           config,
-          upgrade
+          upgrade,
+          'Pre-upgrade'
         );
         artifactErrors.concat(commandError);
       }
@@ -66,7 +67,7 @@ export async function preUpgradeCommandsExecutor(
       updatedArtifacts = await updateUpdatedArtifacts(
         fileFilters,
         updatedArtifacts,
-        'Pre-update'
+        'Pre-upgrade'
       );
     }
   }
