@@ -97,7 +97,8 @@ export async function preUpgradeCommandsExecutor(
 
       updatedArtifacts = await updateUpdatedArtifacts(
         fileFilters,
-        updatedArtifacts
+        updatedArtifacts,
+        'Pre-update'
       );
     }
   }
