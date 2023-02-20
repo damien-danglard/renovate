@@ -1,6 +1,5 @@
 import is from '@sindresorhus/is';
 import { GlobalConfig } from '../../../../config/global';
-import { addMeta, logger } from '../../../../logger';
 import type { BranchConfig, BranchUpgradeConfig } from '../../../types';
 import {
   UpgradeCommandsExecutionResult,
@@ -17,14 +16,6 @@ export async function preUpgradeCommandsExecutor(
     GlobalConfig.get();
 
   for (const upgrade of filteredUpgradeCommands) {
-    addMeta({ dep: upgrade.depName });
-    logger.trace(
-      {
-        tasks: upgrade.preUpgradeTasks,
-        allowedCommands: allowedUpgradeCommands,
-      },
-      `Checking for pre-upgrade tasks`
-    );
     const upgradeTask = upgrade.preUpgradeTasks;
     const result = await upgradeTaskExecutor(
       upgradeTask,
