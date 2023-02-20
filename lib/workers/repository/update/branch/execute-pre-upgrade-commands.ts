@@ -32,7 +32,8 @@ export async function preUpgradeCommandsExecutor(
       updatedArtifacts,
       allowedUpgradeCommands,
       allowUpgradeCommandTemplating,
-      upgrade
+      upgrade,
+      'Pre-upgrade'
     );
     updatedArtifacts.concat(result.updatedArtifacts);
     artifactErrors.concat(result.artifactErrors);

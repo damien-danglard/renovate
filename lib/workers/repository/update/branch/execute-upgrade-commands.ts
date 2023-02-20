@@ -29,7 +29,8 @@ export async function upgradeTaskExecutor(
   updatedArtifacts: FileChange[],
   allowedUpgradeCommands: string[] | undefined,
   allowUpgradeCommandTemplating: boolean | undefined,
-  upgrade: BranchUpgradeConfig
+  upgrade: BranchUpgradeConfig,
+  taskType: string
 ): Promise<UpgradeCommandsExecutionResult> {
   let currentUpdatedArtifacts = updatedArtifacts;
   const artifactErrors: ArtifactError[] = [];
@@ -50,7 +51,7 @@ export async function upgradeTaskExecutor(
         allowUpgradeCommandTemplating,
         config,
         upgrade,
-        'Pre-upgrade'
+        taskType
       );
       artifactErrors.concat(commandError);
     }
@@ -58,7 +59,7 @@ export async function upgradeTaskExecutor(
     currentUpdatedArtifacts = await updateUpdatedArtifacts(
       fileFilters,
       currentUpdatedArtifacts,
-      'Pre-upgrade'
+      taskType
     );
   }
   return { updatedArtifacts: currentUpdatedArtifacts, artifactErrors };
