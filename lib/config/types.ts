@@ -1,5 +1,4 @@
 import type { LogLevel } from 'bunyan';
-import type { Range } from 'semver';
 import type { PlatformId } from '../constants';
 import type { HostRule } from '../types';
 import type { GitNoVerifyOption } from '../util/git/types';
@@ -55,7 +54,8 @@ export interface RenovateSharedConfig {
   hashedBranchLength?: number;
   npmrc?: string;
   npmrcMerge?: boolean;
-  postUpgradeTasks?: PostUpgradeTasks;
+  postUpgradeTasks?: UpgradeTasks | null;
+  preUpgradeTasks?: UpgradeTasks | null;
   prBodyColumns?: string[];
   prBodyDefinitions?: Record<string, string>;
   prCreation?: 'immediate' | 'not-pending' | 'status-success' | 'approval';
@@ -110,9 +110,9 @@ export interface GlobalOnlyConfig {
 export interface RepoGlobalConfig {
   allowCustomCrateRegistries?: boolean;
   allowPlugins?: boolean;
-  allowPostUpgradeCommandTemplating?: boolean;
+  allowUpgradeCommandTemplating?: boolean;
   allowScripts?: boolean;
-  allowedPostUpgradeCommands?: string[];
+  allowedUpgradeCommands?: string[];
   binarySource?: 'docker' | 'global' | 'install' | 'hermit';
   cacheHardTtlMinutes?: number;
   customEnvVariables?: Record<string, string>;
@@ -153,7 +153,7 @@ export interface LegacyAdminConfig {
 
 export type ExecutionMode = 'branch' | 'update';
 
-export interface PostUpgradeTasks {
+export interface UpgradeTasks {
   commands?: string[];
   fileFilters?: string[];
   executionMode: ExecutionMode;
@@ -317,7 +317,7 @@ export interface PackageRule
   excludePackagePatterns?: string[];
   excludePackagePrefixes?: string[];
   matchCurrentValue?: string;
-  matchCurrentVersion?: string | Range;
+  matchCurrentVersion?: string;
   matchSourceUrlPrefixes?: string[];
   matchSourceUrls?: string[];
   matchUpdateTypes?: UpdateType[];
@@ -357,7 +357,12 @@ export interface RenovateOptionBase {
 
   name: string;
 
-  parent?: 'hostRules' | 'packageRules' | 'postUpgradeTasks' | 'regexManagers';
+  parent?:
+    | 'hostRules'
+    | 'packageRules'
+    | 'postUpgradeTasks'
+    | 'preUpgradeTasks'
+    | 'regexManagers';
 
   // used by tests
   relatedOptions?: string[];

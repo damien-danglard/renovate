@@ -2,24 +2,24 @@ import { fs, git, partial } from '../../../../../test/util';
 import { GlobalConfig } from '../../../../config/global';
 import type { StatusResult } from '../../../../util/git/types';
 import type { BranchConfig, BranchUpgradeConfig } from '../../../types';
-import * as postUpgradeCommands from './execute-post-upgrade-commands';
+import * as preUpgradeCommands from './execute-pre-upgrade-commands';
 
 jest.mock('../../../../util/fs');
 jest.mock('../../../../util/git');
 
-describe('workers/repository/update/branch/execute-post-upgrade-commands', () => {
-  describe('postUpgradeCommandsExecutor', () => {
+describe('workers/repository/update/branch/execute-pre-upgrade-commands', () => {
+  describe('preUpgradeCommandsExecutor', () => {
     it('handles an artifact which is a directory', async () => {
-      const commands = partial<BranchUpgradeConfig>([
+      const commands: BranchUpgradeConfig[] = [
         {
           manager: 'some-manager',
           branchName: 'main',
-          postUpgradeTasks: {
+          preUpgradeTasks: {
             executionMode: 'update',
             commands: ['disallowed_command'],
           },
         },
-      ]);
+      ];
       const config: BranchConfig = {
         manager: 'some-manager',
         updatedPackageFiles: [],
@@ -41,7 +41,7 @@ describe('workers/repository/update/branch/execute-post-upgrade-commands', () =>
       );
       GlobalConfig.set({
         localDir: __dirname,
-        allowedPostUpgradeCommands: ['some-command'],
+        allowedPreUpgradeCommands: ['some-command'],
       });
       fs.localPathIsFile
         .mockResolvedValueOnce(true)
@@ -50,7 +50,7 @@ describe('workers/repository/update/branch/execute-post-upgrade-commands', () =>
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true);
 
-      const res = await postUpgradeCommands.postUpgradeCommandsExecutor(
+      const res = await preUpgradeCommands.preUpgradeCommandsExecutor(
         commands,
         config
       );

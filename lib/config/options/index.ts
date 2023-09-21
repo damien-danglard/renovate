@@ -22,17 +22,17 @@ const options: RenovateOptions[] = [
     globalOnly: true,
   },
   {
-    name: 'allowPostUpgradeCommandTemplating',
+    name: 'allowUpgradeCommandTemplating',
     description:
-      'Set this to `true` to allow templating for post-upgrade commands.',
+      'Set this to `true` to allow templating for pre-upgrade and post-upgrade commands.',
     type: 'boolean',
     default: false,
     globalOnly: true,
   },
   {
-    name: 'allowedPostUpgradeCommands',
+    name: 'allowedUpgradeCommands',
     description:
-      'A list of regular expressions that decide which post-upgrade tasks are allowed.',
+      'A list of regular expressions that decide which pre-upgrade and post-upgrade tasks are allowed.',
     type: 'array',
     subType: 'string',
     default: [],
@@ -75,6 +75,47 @@ const options: RenovateOptions[] = [
       'Controls when the post upgrade tasks run: on every update, or once per upgrade branch.',
     type: 'string',
     parent: 'postUpgradeTasks',
+    allowedValues: ['update', 'branch'],
+    default: 'update',
+    cli: false,
+  },
+  {
+    name: 'preUpgradeTasks',
+    description:
+      'Pre-upgrade tasks that are executed before updating dependency files by Renovate.',
+    type: 'object',
+    default: {
+      commands: [],
+      fileFilters: [],
+      executionMode: 'update',
+    },
+  },
+  {
+    name: 'commands',
+    description:
+      'A list of pre-upgrade commands that are executed before updating dependency files by Renovate.',
+    type: 'array',
+    subType: 'string',
+    parent: 'preUpgradeTasks',
+    default: [],
+    cli: false,
+  },
+  {
+    name: 'fileFilters',
+    description:
+      'Files that match the glob pattern will be committed after running a pre-upgrade task.',
+    type: 'array',
+    subType: 'string',
+    parent: 'preUpgradeTasks',
+    default: [],
+    cli: false,
+  },
+  {
+    name: 'executionMode',
+    description:
+      'Controls when the pre upgrade tasks run: on every update, or once per upgrade branch.',
+    type: 'string',
+    parent: 'preUpgradeTasks',
     allowedValues: ['update', 'branch'],
     default: 'update',
     cli: false,
